@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diablo Automatization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            width: 100%;
+            font-family: 'Verdana', sans-serif;
+            color: white;
+            overflow-y: auto;
+        }
+        body {
+            background-image: url('diablo-photo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .header {
+            position: relative;
+            margin: 20px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+        .formulas {
+            margin: 20px;
+            color: #ffffff;
+        }
+        .formula-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .formula-box {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        .formula-title {
+            font-size: 1.5em;
+            margin: 0;
+            color: #ffffff;
+            padding: 10px;
+            background-color: rgba(128, 128, 128, 0.6);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .formula-indicator {
+            margin-right: 10px;
+            color: #ffffff;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group select,
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .add-btn, .calculate-btn, .remove-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #ff6600;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 48%;
+            margin-right: 2%;
+        }
+        .remove-btn {
+            margin-right: 0;
+        }
+        .add-btn:hover, .calculate-btn:hover, .remove-btn:hover {
+            background-color: #ff4500;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .result-small {
+            font-size: 0.9em;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+
+        /* Мобильные стили */
+        @media (max-width: 600px) {
+            .header {
+                font-size: 1.5em;
+                margin: 10px;
+            }
+            .formula-title {
+                font-size: 1.2em;
+            }
+            .add-btn, .calculate-btn, .remove-btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Diablo Automatization</div>
+    <div class="formulas">
+        <!-- Первая формула -->
+        <div class="formula-item" onclick="toggleFormula('formula-1')">
+            <div class="formula-indicator">1)</div>
+            <div class="formula-title">Продажа 💍 по 5%</div>
+        </div>
+        <div id="formula-1" class="formula-box">
+            <div class="input-group">
+                <label for="level-1">Уровень 💍:</label>
+                <select id="level-1" name="level-1" class="level">
+                    <option value="5">1 - 5</option>
+                    <option value="10">6 - 10</option>
+                    <option value="15">11 - 15</option>
+                    <option value="20">16 - 20</option>
+                    <option value="25">21 - 25</option>
+                    <option value="30">26 - 30</option>
+                    <option value="35">31 - 35</option>
+                    <option value="40">36 - 40</option>
+                    <option value="45">41 - 45</option>
+                    <option value="50">46 - 50</option>
+                    <option value="55">51 - 55</option>
+                    <option value="60">56 - 60</option>
+                    <option value="65">61 - 65</option>
+                    <option value="66">66 - 69</option>
+                    <option value="70">70</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="quantity-1">Количество 💍:</label>
+                <input type="number" id="quantity-1" name="quantity-1" class="quantity" min="1">
+            </div>
+            <div id="additional-inputs-1"></div>
+            <button class="add-btn" onclick="addInputFields('additional-inputs-1')">+</button>
+            <button class="remove-btn" onclick="removeInputFields('additional-inputs-1')">-</button>
+            <button class="add-btn" onclick="addExtraInputFields('additional-inputs-1')">+📙</button>
+            <button class="remove-btn" onclick="removeExtraInputFields('additional-inputs-1')">-📙</button>
+            <div class="input-group">
+                <label for="guild-multiplier-1">Множитель гильдии:</label>
+                <select id="guild-multiplier-1" class="guild-multiplier">
+                    <option value="1.0">1.0</option>
+                    <option value="0.7">0.7</option>
+                    <option value="0.8">0.8</option>
+                    <option value="1.4">1.4</option>
+                    <option value="1.5">1.5</option>
+                    <option value="2.0">2.0</option>
+                </select>
+            </div>
+            <button class="calculate-btn" onclick="calculateTotal(1)">Выполнить</button>
+            <div id="result-1" class="result"></div>
+        </div>
+
+        <!-- Вторая формула -->
+        <div class="formula-item" onclick="toggleFormula('formula-2')">
+            <div class="formula-indicator">2)</div>
+            <div class="formula-title">Продажа 🧩</div>
+        </div>
+        <div id="formula-2" class="formula-box">
+            <div class="input-group">
+                <label for="level-2">Уровень 🧩:</label>
+                <select id="level-2" name="level-2" class="level">
+                    <option value="5">1 - 5</option>
+                    <option value="10">6 - 10</option>
+                    <option value="15">11 - 15</option>
+                    <option value="20">16 - 20</option>
+                    <option value="25">21 - 25</option>
+                    <option value="30">26 - 30</option>
+                    <option value="35">31 - 35</option>
+                    <option value="40">36 - 40</option>
+                    <option value="45">41 - 45</option>
+                    <option value="50">46 - 50</option>
+                    <option value="55">51 - 55</option>
+                    <option value="60">56 - 60</option>
+                    <option value="65">61 - 65</option>
+                    <option value="66">66 - 69</option>
+                    <option value="70">70</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="quantity-2">Количество 🧩:</label>
+                <input type="number" id="quantity-2" name="quantity-2" class="quantity" min="1">
+            </div>
+            <div id="additional-inputs-2"></div>
+            <button class="add-btn" onclick="addInputFields('additional-inputs-2')">+</button>
+            <button class="remove-btn" onclick="removeInputFields('additional-inputs-2')">-</button>
+            <button class="add-btn" onclick="addExtraInputFields('additional-inputs-2')">+📙</button>
+            <button class="remove-btn" onclick="removeExtraInputFields('additional-inputs-2')">-📙</button>
+            <div class="input-group">
+                <label for="guild-multiplier-2">Множитель гильдии:</label>
+                <select id="guild-multiplier-2" class="guild-multiplier">
+                    <option value="1.0">1.0</option>
+                    <option value="0.7">0.7</option>
+                    <option value="0.8">0.8</option>
+                    <option value="1.4">1.4</option>
+                    <option value="1.5">1.5</option>
+                    <option value="2.0">2.0</option>
+                </select>
+            </div>
+            <button class="calculate-btn" onclick="calculateTotal(2)">Выполнить</button>
+            <div id="result-2" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const priceTable1 = {
+            5: 0.75, 10: 1.05, 15: 1.5, 20: 3, 25: 4.2,
+            30: 6, 35: 9, 40: 18, 45: 27, 50: 42,
+            55: 69, 60: 105, 65: 180, 66: 279, 67: 279, 68: 279, 69: 279, 70: 360
+        };
+
+        const priceTable2 = {
+            5: 0.75, 10: 0.90, 15: 1.20, 20: 1.65, 25: 3,
+            30: 6, 35: 8.4, 40: 13.8, 45: 19.5, 50: 33,
+            55: 54, 60: 81, 61: 135, 66: 210, 70: 261
+        };
+
+        function toggleFormula(formulaId) {
+            const formulaBox = document.getElementById(formulaId);
+            formulaBox.style.display = formulaBox.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function addInputFields(containerId) {
+            const additionalInputs = document.getElementById(containerId);
+            const inputFields = `
+                <div class="input-group">
+                    <label>Уровень:</label>
+                    <select class="level">
+                        <option value="5">1 - 5</option>
+                        <option value="10">6 - 10</option>
+                        <option value="15">11 - 15</option>
+                        <option value="20">16 - 20</option>
+                        <option value="25">21 - 25</option>
+                        <option value="30">26 - 30</option>
+                        <option value="35">31 - 35</option>
+                        <option value="40">36 - 40</option>
+                        <option value="45">41 - 45</option>
+                        <option value="50">46 - 50</option>
+                        <option value="55">51 - 55</option>
+                        <option value="60">56 - 60</option>
+                        <option value="65">61 - 65</option>
+                        <option value="66">66 - 69</option>
+                        <option value="70">70</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Количество:</label>
+                    <input type="number" class="quantity" min="1">
+                </div>`;
+            additionalInputs.insertAdjacentHTML('beforeend', inputFields);
+        }
+
+        function removeInputFields(containerId) {
+            const additionalInputs = document.getElementById(containerId);
+            if (additionalInputs.lastElementChild) {
+                additionalInputs.removeChild(additionalInputs.lastElementChild);
+                additionalInputs.removeChild(additionalInputs.lastElementChild);
+            }
+        }
+
+        function calculateTotal(formulaNumber) {
+            const quantities = document.querySelectorAll(`#formula-${formulaNumber} .quantity`);
+            const levels = document.querySelectorAll(`#formula-${formulaNumber} .level`);
+            let totalValue = 0;
+            const levelTotals = {};
+
+            for (let i = 0; i < quantities.length; i++) {
+                const quantity = parseInt(quantities[i].value) || 0;
+                const level = parseInt(levels[i].value) || 0;
+                const price = formulaNumber === 1 ? priceTable1[level] || 0 : priceTable2[level] || 0;
+                const levelTotal = quantity * price;
+
+                totalValue += levelTotal;
+                if (level in levelTotals) {
+                    levelTotals[level] += levelTotal;
+                } else {
+                    levelTotals[level] = levelTotal;
+                }
+            }
+
+            const multiplier = parseFloat(document.getElementById(`guild-multiplier-${formulaNumber}`).value) || 1;
+            const adjustedTotal = totalValue * multiplier;
+
+            const resultElement = document.getElementById(`result-${formulaNumber}`);
+            resultElement.innerHTML = `<strong>Результат:</strong> ${formatCurrency(adjustedTotal)} (${adjustedTotal.toFixed(2)})`;
+            
+            Object.keys(levelTotals).forEach(level => {
+                resultElement.innerHTML += `<div class="result-small">вещи ${level} уровня: ${formatCurrency(levelTotals[level])} (${levelTotals[level].toFixed(2)})</div>`;
+            });
+        }
+
+        function formatCurrency(value) {
+            let yens = Math.floor(value * 100) % 100;
+            let med = Math.floor(value) % 100;
+            let silver = Math.floor(value / 100) % 100;
+            let gold = Math.floor(value / 10000);
+
+            let currencyString = "";
+            if (gold > 0) currencyString += `${gold}🥇`;
+            if (silver > 0) currencyString += `${silver}🥈`;
+            if (med > 0) currencyString += `${med}🥉`;
+            if (yens > 0) currencyString += `${yens}🀄`;
+            return currencyString;
+        }
+    </script>
+    <script src="additionalItems.js"></script>
+    <script src="additionalResources.js"></script>
+</body>
+</html>
