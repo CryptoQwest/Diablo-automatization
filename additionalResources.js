@@ -76,7 +76,8 @@ function calculateTotal(formulaNumber) {
     }
 
     const multiplier = parseFloat(document.getElementById(`guild-multiplier-${formulaNumber}`).value) || 1;
-    const adjustedTotal = totalValue * multiplier;
+    const portalmultiplier = parseFloat(document.getElementById(`portal-multiplier-${formulaNumber}`).value) || 1.0;
+    const adjustedTotal = totalValue * multiplier * portalmultiplier;
 
     const resultElement = document.getElementById(`result-${formulaNumber}`);
     resultElement.innerHTML = `<strong>Результат:</strong> ${formatCurrency(adjustedTotal)} (${adjustedTotal.toFixed(2)})`;
