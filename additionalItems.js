@@ -39,16 +39,20 @@ function removeExtraInputFields(containerId) {
 function calculateTotal(formulaNumber) {
     const quantities = document.querySelectorAll(`#formula-${formulaNumber} .quantity`);
     const levels = document.querySelectorAll(`#formula-${formulaNumber} .level`);
-    const extraQuantities = document.querySelectorAll(`#formula-${formulaNumber} .quantity-item`);
-    const extraLevels = document.querySelectorAll(`#formula-${formulaNumber} .level-item`);
+
+    console.log(`Quantities:`, quantities);
+    console.log(`Levels:`, levels);
+
     let totalValue = 0;
     const levelTotals = {};
 
-    // Основные блоки
     for (let i = 0; i < quantities.length; i++) {
         const quantity = parseInt(quantities[i].value) || 0;
         const level = parseInt(levels[i].value) || 0;
+
+        // Используем priceTable1 для первой формулы и priceTable2 для второй
         const price = formulaNumber === 1 ? priceTable1[level] || 0 : priceTable2[level] || 0;
+
         const levelTotal = quantity * price;
 
         totalValue += levelTotal;
@@ -59,28 +63,13 @@ function calculateTotal(formulaNumber) {
         }
     }
 
-    // Дополнительные блоки
-    for (let j = 0; j < extraQuantities.length; j++) {
-        const extraQuantity = parseInt(extraQuantities[j].value) || 0;
-        const extraLevel = parseInt(extraLevels[j].value) || 0;
-        const price = formulaNumber === 1 ? priceTable1[extraLevel] || 0 : priceTable2[extraLevel] || 0;
-        const extraLevelTotal = (price / 3) * 4 * extraQuantity;
-
-        totalValue += extraLevelTotal;
-        if (extraLevel in levelTotals) {
-            levelTotals[extraLevel] += extraLevelTotal;
-        } else {
-            levelTotals[extraLevel] = extraLevelTotal;
-        }
-    }
-
     const multiplier = parseFloat(document.getElementById(`guild-multiplier-${formulaNumber}`).value) || 1;
     const portalmultiplier = parseFloat(document.getElementById(`portal-multiplier-${formulaNumber}`).value) || 1.0;
     const adjustedTotal = totalValue * multiplier * portalmultiplier;
 
     const resultElement = document.getElementById(`result-${formulaNumber}`);
     resultElement.innerHTML = `<strong>Результат:</strong> ${formatCurrency(adjustedTotal)} (${adjustedTotal.toFixed(2)})`;
-    
+
     Object.keys(levelTotals).forEach(level => {
         resultElement.innerHTML += `<div class="result-small">вещи ${level} уровня: ${formatCurrency(levelTotals[level])} (${levelTotals[level].toFixed(2)})</div>`;
     });
