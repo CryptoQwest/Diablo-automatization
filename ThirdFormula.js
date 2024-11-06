@@ -1,26 +1,25 @@
-// Пример обработки данных для расчётов
 function executeCalculation() {
-    let bookInput = parseFloat(cleanFormattedNumber(document.getElementById('bookInput').value));
-    let hourglassInput = parseFloat(cleanFormattedNumber(document.getElementById('hourglassInput').value));
-    let lastKilled1Input = parseInt(cleanFormattedNumber(document.getElementById('lastKilled1Input').value));
-    let lastKilled2Input = parseInt(cleanFormattedNumber(document.getElementById('lastKilled2Input').value));
-    let incomingKilled1Input = parseInt(cleanFormattedNumber(document.getElementById('incomingKilled1Input').value));
-    let incomingKilled2Input = parseInt(cleanFormattedNumber(document.getElementById('incomingKilled2Input').value));
-    let totalKilled1Input = parseInt(cleanFormattedNumber(document.getElementById('totalKilled1Input').value));
-    let totalKilled2Input = parseInt(cleanFormattedNumber(document.getElementById('totalKilled2Input').value));
-    let lastInput1 = parseInt(cleanFormattedNumber(document.getElementById('lastInput1').value));
-    let lastInput2 = parseInt(cleanFormattedNumber(document.getElementById('lastInput2').value));
-    let newInput1 = parseInt(cleanFormattedNumber(document.getElementById('death1Input').value));
-    let newInput2 = parseInt(cleanFormattedNumber(document.getElementById('death2Input').value));
+    let bookInput = parseFloat(cleanFormattedNumber(document.getElementById('bookInput').value)) || 0;
+    let hourglassInput = parseFloat(cleanFormattedNumber(document.getElementById('hourglassInput').value)) || 0;
+    let lastKilled1Input = parseInt(cleanFormattedNumber(document.getElementById('lastKilled1Input').value)) || 0;
+    let lastKilled2Input = parseInt(cleanFormattedNumber(document.getElementById('lastKilled2Input').value)) || 0;
+    let incomingKilled1Input = parseInt(cleanFormattedNumber(document.getElementById('incomingKilled1Input').value)) || 0;
+    let incomingKilled2Input = parseInt(cleanFormattedNumber(document.getElementById('incomingKilled2Input').value)) || 0;
+    let totalKilled1Input = parseInt(cleanFormattedNumber(document.getElementById('totalKilled1Input').value)) || 0;
+    let totalKilled2Input = parseInt(cleanFormattedNumber(document.getElementById('totalKilled2Input').value)) || 0;
+    let lastInput1 = parseInt(cleanFormattedNumber(document.getElementById('lastInput1').value)) || 0;
+    let lastInput2 = parseInt(cleanFormattedNumber(document.getElementById('lastInput2').value)) || 0;
+    let newInput1 = parseInt(cleanFormattedNumber(document.getElementById('death1Input').value)) || 0;
+    let newInput2 = parseInt(cleanFormattedNumber(document.getElementById('death2Input').value)) || 0;
 
     let guildMultiplier = parseFloat(document.getElementById('guild-multiplier-3').value) || 1;
     let portalMultiplier = parseFloat(document.getElementById('portal-multiplier-3').value) || 1;
 
     let result = ((newInput1 - lastInput1) / 100 + (newInput2 - lastInput2) / 10) * guildMultiplier * portalMultiplier;
-    result = result.toFixed(2);
+    result = parseFloat(result.toFixed(2));
 
-    bookInput += parseFloat(result);
-    hourglassInput += parseFloat(result);
+    bookInput += result;
+    hourglassInput += result;
 
     let lastKilled1 = newInput1 - lastInput1;
     let lastKilled2 = newInput2 - lastInput2;
@@ -38,6 +37,10 @@ function executeCalculation() {
     document.getElementById('totalKilled2Input').value = totalKilled2;
     document.getElementById('lastInput1').value = lastInput1;
     document.getElementById('lastInput2').value = lastInput2;
+}
+
+function cleanFormattedNumber(inputValue) {
+    return inputValue ? inputValue.replace(/\s+/g, '') : '';
 }
 
 function saveData() {
