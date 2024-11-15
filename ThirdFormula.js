@@ -14,8 +14,9 @@ function executeCalculation() {
 
     let guildMultiplier = parseFloat(document.getElementById('guild-multiplier-3').value) || 1;
     let portalMultiplier = parseFloat(document.getElementById('portal-multiplier-3').value) || 1;
+    let timePortalMultiplier = parseFloat(document.getElementById('time-portal-multiplier-3').value) || 1;
 
-    let result = ((newInput1 - lastInput1) / 100 + (newInput2 - lastInput2) / 10) * guildMultiplier * portalMultiplier;
+    let result = ((newInput1 - lastInput1) / 100 + (newInput2 - lastInput2) / 10) * guildMultiplier * portalMultiplier * timePortalMultiplier;
     result = parseFloat(result.toFixed(2));
 
     bookInput += result;
