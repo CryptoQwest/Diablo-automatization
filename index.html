@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diablo Automatization</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:wght@400;500&family=Nunito:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Roboto', 'Nunito', sans-serif;
+        }
+
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            color: #eaeaea;
+            overflow-y: auto;
+        }
+
+        body {
+            background-image: url('diablo-photo-pc.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #2e2e2e;
+            height: 100%;
+        }
+
+        .header {
+            margin: 20px;
+            font-size: 2.2em;
+            font-weight: 500;
+            color: #ececec;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+            transition: color 0.3s ease;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        .header:hover {
+            color: #d4a373;
+        }
+
+        /* Убираем стрелочки для всех полей ввода типа number */
+        input[type="number"] {
+            appearance: textfield;
+            -moz-appearance: textfield;
+            /* Для Firefox */
+            -webkit-appearance: textfield;
+            /* Для Safari и Chrome */
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .formulas {
+            margin: 20px;
+            color: #ececec;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        .formula-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .formula-item:hover {
+            transform: scale(1.03);
+        }
+
+        .formula-box {
+            background-color: rgba(30, 30, 30, 0.85);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+            display: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .formula-title {
+            font-size: 1.5em;
+            margin: 0;
+            color: #d4a373;
+            padding: 10px;
+            background-color: rgba(40, 40, 40, 0.9);
+            border-radius: 10px;
+            cursor: pointer;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .formula-title:hover {
+            color: #f4d9b9;
+            background-color: rgba(50, 50, 50, 0.9);
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1em;
+            color: #ececec;
+            opacity: 0.9;
+        }
+
+        .input-group select,
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(40, 40, 40, 0.9);
+            color: #d4a373;
+            font-weight: 500;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        .input-group select:hover,
+        .input-group input:hover {
+            background-color: rgba(50, 50, 50, 0.9);
+        }
+
+        .add-btn,
+        .calculate-btn,
+        .remove-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #d4a373;
+            color: #2e2e2e;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 48%;
+            margin-right: 2%;
+            font-weight: 500;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .add-btn:hover,
+        .calculate-btn:hover,
+        .remove-btn:hover {
+            background-color: #f4d9b9;
+            transform: scale(1.05);
+        }
+
+        .remove-btn {
+            margin-right: 0;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #f4d9b9;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .result-small {
+            font-size: 1.1em;
+            margin-top: 5px;
+            line-height: 1.5;
+            color: #ececec;
+        }
+
+        /* Для встроенного поля ввода кнопки "-📖" */
+        .adjust-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Для кнопок */
+        .adjust-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .adjust-btn {
+            width: auto;
+            /* Ширина автоматически подстраивается под текст */
+            padding: 8px 16px;
+            /* Делаем одинаковые отступы для всех кнопок */
+            background-color: rgba(212, 163, 115, 0.9);
+            /* Жёлтый цвет для кнопок */
+            color: #333;
+            /* Тёмный текст на жёлтом фоне */
+            font-weight: 500;
+            border: none;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            margin-right: 5px;
+            /* Расстояние между кнопками */
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Эффект при наведении на кнопку */
+        .adjust-btn:hover {
+            background-color: rgba(180, 140, 85, 0.9);
+            /* Немного тёмнее при наведении */
+        }
+
+        /* Для встроенного поля ввода кнопки "-📖" */
+        .styled-input {
+            border: none;
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            background-color: rgba(40, 40, 40, 0.9);
+            /* Цвет поля ввода */
+            color: #d4a373;
+            /* Цвет текста */
+            font-weight: 500;
+            border-radius: 10px;
+            /* Скруглённые края */
+            text-align: center;
+            font-size: 14px;
+            padding: 8px 12px;
+            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+            /* Мягкая тень */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Эффект при наведении на поле */
+        .styled-input:hover {
+            background-color: rgba(50, 50, 50, 0.9);
+        }
+
+        .styled-input {
+            /* Убираем стрелочки */
+            appearance: textfield;
+            -moz-appearance: textfield;
+            /* Для Firefox */
+            -webkit-appearance: textfield;
+            /* Для Safari и Chrome */
+        }
+
+        .styled-input:focus {
+            outline: none;
+            /* Убираем стандартный фокус */
+            border-color: rgba(160, 120, 75, 0.6);
+            /* Мягкая светло-коричневая обводка */
+            box-shadow: 0px 0px 6px rgba(160, 120, 75, 0.5);
+            /* Более яркое свечение */
+        }
+
+        .styled-input::-webkit-inner-spin-button,
+        .styled-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            /* Убираем стрелочки в Chrome/Safari */
+        }
+
+        /* Для полей .quantity и .input-field */
+        .formula-box .quantity,
+        .formula-box .input-field {
+            border: 1px solid transparent;
+            /* Более тонкая начальная обводка */
+            background-color: rgba(40, 40, 40, 0.9);
+            /* Цвет фона как у множителей */
+            color: #d4a373;
+            /* Текст как у множителей */
+            font-weight: 500;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            padding: 10px;
+            box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* При наведении на поле */
+        .formula-box .quantity:hover,
+        .formula-box .input-field:hover {
+            border-color: rgba(160, 120, 75, 0.6);
+            /* Мягкая светло-коричневая обводка */
+            box-shadow: 0px 0px 4px rgba(160, 120, 75, 0.4);
+            /* Едва заметное свечение */
+        }
+
+        /* При фокусе на поле */
+        .formula-box .quantity:focus,
+        .formula-box .input-field:focus {
+            border-color: rgba(190, 150, 95, 0.7);
+            /* Чуть более выраженная обводка */
+            box-shadow: 0px 0px 6px rgba(190, 150, 95, 0.5);
+            /* Немного более яркое свечение */
+            outline: none;
+            /* Убираем стандартный фокус */
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Мобильные стили */
+        @media (max-width: 600px) {
+            .header {
+                font-size: 1.8em;
+                margin: 10px;
+            }
+
+            .formula-title {
+                font-size: 1.4em;
+            }
+
+            .add-btn,
+            .calculate-btn,
+            .remove-btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            body {
+                background-image: url('diablo-mobile-photo.jpg');
+            }
+
+            .styled-input {
+                width: 60px;
+                /* Компактное поле для мобильных экранов */
+                font-size: 12px;
+            }
+
+            .adjust-btn {
+                padding: 6px 12px;
+                /* Меньшие отступы для мобильной версии */
+            }
+        }
+
+        /* Стили для таблицы */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: rgba(40, 40, 40, 0.85);
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #555;
+        }
+
+        th {
+            background-color: rgba(60, 60, 60, 0.9);
+            color: #d4a373;
+        }
+
+        tr:hover {
+            background-color: rgba(50, 50, 50, 0.9);
+        }
+
+        td {
+            color: #ececec;
+        }
+
+        .table-title {
+            font-size: 1.3em;
+            color: #d4a373;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Стиль для поля ввода имени пользователя */
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(40, 40, 40, 0.9);
+            color: #d4a373;
+            font-size: 1.1em;
+            font-weight: 400;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-field::placeholder {
+            color: #b0a1a1;
+            opacity: 0.8;
+        }
+
+        .input-field:hover {
+            background-color: rgba(50, 50, 50, 0.9);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .input-field:focus {
+            outline: none;
+            background-color: rgba(60, 60, 60, 0.9);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header" onclick="toggleFormulas()">Diablo Automatization</div>
+    <div class="formulas" id="formulas">
+        <!-- Первая формула -->
+        <div class="formula-item" onclick="toggleFormula('formula-1')">
+            <div class="formula-indicator">1)</div>
+            <div class="formula-title">Продажа 💍 по 5%</div>
+        </div>
+        <div id="formula-1" class="formula-box">
+            <div class="input-group">
+                <label for="level-1">Уровень 💍:</label>
+                <select id="level-1" name="level-1" class="level">
+                    <option value="5">1 - 5</option>
+                    <option value="10">6 - 10</option>
+                    <option value="15">11 - 15</option>
+                    <option value="20">16 - 20</option>
+                    <option value="25">21 - 25</option>
+                    <option value="30">26 - 30</option>
+                    <option value="35">31 - 35</option>
+                    <option value="40">36 - 40</option>
+                    <option value="45">41 - 45</option>
+                    <option value="50">46 - 50</option>
+                    <option value="55">51 - 55</option>
+                    <option value="60">56 - 60</option>
+                    <option value="65">61 - 65</option>
+                    <option value="66">66 - 69</option>
+                    <option value="70">70</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="quantity-1">Количество 💍:</label>
+                <input type="number" id="quantity-1" name="quantity-1" class="quantity" min="1">
+            </div>
+            <div id="additional-inputs-1"></div>
+            <button class="add-btn" onclick="addInputFields('additional-inputs-1')">+</button>
+            <button class="remove-btn" onclick="removeInputFields('additional-inputs-1')">-</button>
+            <button class="add-btn" onclick="addNewItem(1)">+📙</button>
+            <div class="input-group">
+                <label for="guild-multiplier-1">Множитель гильдии:</label>
+                <select id="guild-multiplier-1" class="guild-multiplier">
+                    <option value="1.0">1.0</option>
+                    <option value="0.7">0.7</option>
+                    <option value="0.8">0.8</option>
+                    <option value="0.86">0.86</option>
+                    <option value="1.36">1.36</option>
+                    <option value="1.5">1.5</option>
+                    <option value="1.72">1.72</option>
+                </select>
+                <label for="portal-multiplier-1">Множитель портала:</label>
+                <select id="portal-multiplier-1" class="portal-multiplier">
+                    <option value="1.0">1.0</option>
+                    <option value="0.29">0.29</option>
+                    <option value="0.44">0.44</option>
+                    <option value="0.52">0.52</option>
+                    <option value="0.66">0.66</option>
+                    <option value="0.78">0.78</option>
+                    <option value="1.17">1.17</option>
+                    <option value="1.5">1.5</option>
+                    <option value="1.75">1.75</option>
+                </select>
+            </div>
+            <button class="calculate-btn" onclick="calculateTotal(1)">Выполнить</button>
+            <div id="result-1" class="result"></div>
+        </div>
+
+        <!-- Вторая формула -->
+        <div class="formula-item" onclick="toggleFormula('formula-2')">
+            <div class="formula-indicator">2)</div>
+            <div class="formula-title">Продажа 🧩</div>
+        </div>
+        <div id="formula-2" class="formula-box">
+            <div class="input-group">
+                <label for="level-2">Уровень 🧩:</label>
+                <select id="level-2" name="level-2" class="level">
+                    <option value="5">1 - 5</option>
+                    <option value="10">6 - 10</option>
+                    <option value="15">11 - 15</option>
+                    <option value="20">16 - 20</option>
+                    <option value="25">21 - 25</option>
+                    <option value="30">26 - 30</option>
+                    <option value="35">31 - 35</option>
+                    <option value="40">36 - 40</option>
+                    <option value="45">41 - 45</option>
+                    <option value="50">46 - 50</option>
+                    <option value="55">51 - 55</option>
+                    <option value="60">56 - 60</option>
+                    <option value="65">61 - 65</option>
+                    <option value="66">66 - 69</option>
+                    <option value="70">70</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="quantity-2">Количество 🧩:</label>
+                <input type="number" id="quantity-2" name="quantity-2" class="quantity" min="1">
+            </div>
+            <div id="additional-inputs-2"></div>
+            <button class="add-btn" onclick="addResoursesInputFields('additional-inputs-2')">+</button>
+            <button class="remove-btn" onclick="removeInputFields('additional-inputs-2')">-</button>
+            <button class="add-btn" onclick="addNewItem(2)">+📙</button>
+            <div class="input-group">
+                <label for="guild-multiplier-2">Множитель гильдии:</label>
+                <select id="guild-multiplier-2" class="guild-multiplier">
+                    <option value="1.0">1.0</option>
+                    <option value="0.7">0.7</option>
+                    <option value="0.8">0.8</option>
+                    <option value="0.86">0.86</option>
+                    <option value="1.36">1.36</option>
+                    <option value="1.4">1.4</option>
+                    <option value="1.5">1.5</option>
+                    <option value="2.0">2.0</option>
+                </select>
+                <label for="portal-multiplier-2">Множитель портала:</label>
+                <select id="portal-multiplier-2" class="portal-multiplier">
+                    <option value="1.0">1.0</option>
+                    <option value="0.29">0.29</option>
+                    <option value="0.44">0.44</option>
+                    <option value="0.52">0.52</option>
+                    <option value="0.66">0.66</option>
+                    <option value="0.78">0.78</option>
+                    <option value="1.17">1.17</option>
+                    <option value="1.5">1.5</option>
+                    <option value="1.75">1.75</option>
+                </select>
+            </div>
+            <button class="calculate-btn" onclick="calculateTotal(2)">Выполнить</button>
+            <div id="result-2" class="result"></div>
+        </div>
+
+        <!-- Третья формула -->
+        <div class="formula-item" onclick="toggleFormula('third-formula')">
+            <div class="formula-indicator">3)</div>
+            <div class="formula-title">Учёт 📖 и ⏳</div>
+        </div>
+        <div id="third-formula" class="formula-box" style="display: none;">
+            <div class="input-group">
+                <label for="username" class="input-label">Введите своё имя:</label>
+                <input type="text" id="username" placeholder="Введите своё имя" class="input-field">
+            </div>
+            <div class="input-group">
+                <button class="add-btn" onclick="restoreData()">Восстановить данные</button>
+            </div>
+            <div id="data-table">
+                <table>
+                    <tr>
+                        <td>📖:</td>
+                        <td><input type="text" id="bookInput" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>⏳:</td>
+                        <td><input type="text" id="hourglassInput" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Посл. убитые 💀:</td>
+                        <td><input type="text" id="lastKilled1Input" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Посл. убитые ☠️:</td>
+                        <td><input type="text" id="lastKilled2Input" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Изн. убитые 💀:</td>
+                        <td><input type="text" id="incomingKilled1Input" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Изн. убитые ☠️:</td>
+                        <td><input type="text" id="incomingKilled2Input" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Общие убитые 💀:</td>
+                        <td><input type="text" id="totalKilled1Input" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Общие убитые ☠️:</td>
+                        <td><input type="text" id="totalKilled2Input" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Посл. вводные 💀:</td>
+                        <td><input type="text" id="lastInput1" class="input-field" disabled /></td>
+                    </tr>
+                    <tr>
+                        <td>Посл. вводные ☠️:</td>
+                        <td><input type="text" id="lastInput2" class="input-field" disabled /></td>
+                    </tr>
+                </table>
+                <div class="input-group">
+                    <button class="add-btn" id="editButton" onclick="editData()">Редактировать</button>
+                    <button class="add-btn" id="saveEditButton" style="display: none;"
+                        onclick="saveEdit()">Сохранить</button>
+                </div>
+                <div class="adjust-buttons">
+                    <button class="adjust-btn" onclick="adjustBookInput(10)">-10%📖</button>
+                    <button class="adjust-btn" onclick="adjustBookInput(5)">-5%📖</button>
+                    <button class="adjust-btn" onclick="addBookValue()">👺</button>
+                    <div class="adjust-inline">
+                        <input id="subtractInput" type="number" step="0.01" placeholder="0"
+                            class="adjust-inline-input styled-input">
+                        <button class="adjust-btn" onclick="subtractFromBook()">-📖</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="death1Input">💀:</label>
+                    <input type="text" id="death1Input" class="input-field" />
+                </div>
+                <div class="input-group">
+                    <label for="death2Input">☠️:</label>
+                    <input type="text" id="death2Input" class="input-field" />
+                </div>
+                <div class="input-group">
+                    <label for="guild-multiplier-3">Множитель гильдии:</label>
+                    <select id="guild-multiplier-3" class="guild-multiplier">
+                        <option value="1.0">1.0</option>
+                        <option value="0.8">0.8</option>
+                        <option value="0.825">0.825</option>
+                        <option value="0.91">0.91</option>
+                        <option value="1.07">1.07</option>
+                        <option value="1.13">1.13</option>
+                        <option value="1.15">1.15</option>
+                        <option value="1.16">1.16</option>
+                        <option value="1.2">1.2</option>
+                        <option value="1.25">1.25</option>
+                        <option value="1.28">1.28</option>
+                        <option value="1.33">1.33</option>
+                        <option value="1.35">1.35</option>
+                        <option value="1.4">1.4</option>
+                        <option value="1.5">1.5</option>
+                        <option value="1.6">1.6</option>
+                        <option value="1.72">1.72</option>
+                        <option value="1.75">1.75</option>
+                        <option value="2.0">2.0</option>
+                        <option value="2.25">2.25</option>
+                        <option value="2.5">2.5</option>
+                        <option value="3.0">3.0</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="portal-multiplier-3">Множитель портала:</label>
+                    <select id="portal-multiplier-3" class="portal-multiplier">
+                        <option value="1.0">1.0</option>
+                        <option value="0.66">0.29</option>
+                        <option value="0.44">0.44</option>
+                        <option value="0.66">0.52</option>
+                        <option value="0.67">0.66</option>
+                        <option value="0.66">0.78</option>
+                        <option value="1.17">1.17</option>
+                        <option value="1.5">1.5</option>
+                        <option value="0.66">1.75</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="time-portal-multiplier-3">Множитель времени портала:</label>
+                    <select id="time-portal-multiplier-3" class="time-portal-multiplier">
+                        <option value="1.0">1.0</option>
+                        <option value="0.066">0.066</option>
+                        <option value="0.09">0.09</option>
+                        <option value="0.125">0.125</option>
+                        <option value="0.2">0.2</option>
+                        <option value="0.33">0.33</option>
+                        <option value="0.5">0.5</option>
+                        <option value="0.75">0.75</option>
+                        <option value="1.3">1.3</option>
+                        <option value="1.6">1.6</option>
+                        <option value="2.0">2.0</option>
+                        <option value="2.4">2.4</option>
+                        <option value="2.8">2.8</option>
+                        <option value="3.0">3.0</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <button class="add-btn" onclick="executeCalculation()">Выполнить обсчёт</button>
+                    <button class="add-btn" onclick="saveData()">Сохранить данные</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const priceTable1 = {
+                5: 0.75, 10: 1.05, 15: 1.5, 20: 3, 25: 4.2,
+                30: 6, 35: 9, 40: 18, 45: 27, 50: 42,
+                55: 69, 60: 105, 61: 180, 62: 180, 63: 180, 64: 180, 65: 180, 66: 279, 67: 279, 68: 279, 69: 279, 70: 323
+            };
+
+            const priceTable2 = {
+                5: 0.75, 10: 0.90, 15: 1.20, 20: 1.65, 25: 3,
+                30: 6, 35: 8.4, 40: 13.8, 45: 19.5, 50: 33,
+                55: 54, 60: 81, 61: 135, 62: 135, 63: 135, 64: 135, 65: 135, 66: 210, 70: 261
+            };
+
+            function toggleFormula(formulaId) {
+                const formulaBox = document.getElementById(formulaId);
+                formulaBox.style.display = formulaBox.style.display === 'block' ? 'none' : 'block';
+            }
+
+            function addInputFields(containerId) {
+                const additionalInputs = document.getElementById(containerId);
+                const inputFields = `
+            <div class="input-group">
+                <label>Уровень💍:</label>
+                <select class="level">
+                    <option value="5">1 - 5</option>
+                    <option value="10">6 - 10</option>
+                    <option value="15">11 - 15</option>
+                    <option value="20">16 - 20</option>
+                    <option value="25">21 - 25</option>
+                    <option value="30">26 - 30</option>
+                    <option value="35">31 - 35</option>
+                    <option value="40">36 - 40</option>
+                    <option value="45">41 - 45</option>
+                    <option value="50">46 - 50</option>
+                    <option value="55">51 - 55</option>
+                    <option value="60">56 - 60</option>
+                    <option value="65">61 - 65</option>
+                    <option value="66">66 - 69</option>
+                    <option value="70">70</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Количество💍:</label>
+                <input type="number" class="quantity" min="1">
+            </div>`;
+                additionalInputs.insertAdjacentHTML('beforeend', inputFields);
+            }
+
+            function addResoursesInputFields(containerId) {
+                const additionalInputs = document.getElementById(containerId);
+                const inputFields = `
+            <div class="input-group">
+                <label>Уровень🧩:</label>
+                <select class="level">
+                    <option value="5">1 - 5</option>
+                    <option value="10">6 - 10</option>
+                    <option value="15">11 - 15</option>
+                    <option value="20">16 - 20</option>
+                    <option value="25">21 - 25</option>
+                    <option value="30">26 - 30</option>
+                    <option value="35">31 - 35</option>
+                    <option value="40">36 - 40</option>
+                    <option value="45">41 - 45</option>
+                    <option value="50">46 - 50</option>
+                    <option value="55">51 - 55</option>
+                    <option value="60">56 - 60</option>
+                    <option value="65">61 - 65</option>
+                    <option value="66">66 - 69</option>
+                    <option value="70">70</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Количество🧩:</label>
+                <input type="number" class="quantity" min="1">
+            </div>`;
+                additionalInputs.insertAdjacentHTML('beforeend', inputFields);
+            }
+
+            function removeInputFields(containerId) {
+                const additionalInputs = document.getElementById(containerId);
+                if (additionalInputs.lastElementChild) {
+                    additionalInputs.removeChild(additionalInputs.lastElementChild);
+                    additionalInputs.removeChild(additionalInputs.lastElementChild);
+                }
+            }
+
+            // Функция для переключения видимости списка формул с плавностью
+            function toggleFormulas() {
+                var formulas = document.getElementById("formulas");
+
+                // Если формулы скрыты, показываем их плавно
+                if (formulas.style.display === "none" || formulas.style.display === "") {
+                    formulas.style.display = "block";  // Показываем список
+                    setTimeout(function () {
+                        formulas.style.opacity = 1;  // Плавно меняем прозрачность
+                    }, 10); // Небольшая задержка для активации перехода
+                } else {
+                    formulas.style.opacity = 0;  // Плавно исчезаем
+                    setTimeout(function () {
+                        formulas.style.display = "none";  // Скрываем список после исчезновения
+                    }, 500);  // Задержка должна совпадать с временем анимации
+                }
+            }
+
+            // Инициализация скрытия списка формул при загрузке страницы
+            window.onload = function () {
+                var formulas = document.getElementById("formulas");
+                formulas.style.display = "none"; // Скрыть при загрузке
+                formulas.style.opacity = 0;  // Скрыть с анимацией
+            };
+
+            function calculateMainTotal(formulaNumber) {
+                const quantities = document.querySelectorAll(`#formula-${formulaNumber} .quantity`);
+                const levels = document.querySelectorAll(`#formula-${formulaNumber} .level`);
+
+                let totalValue = 0;
+                const levelTotals = {};
+
+                for (let i = 0; i < quantities.length; i++) {
+                    const quantity = parseInt(quantities[i].value) || 0;
+                    const level = parseInt(levels[i].value) || 0;
+
+                    // Используем priceTable1 для первой формулы и priceTable2 для второй
+                    const price = formulaNumber === 1 ? priceTable1[level] || 0 : priceTable2[level] || 0;
+
+                    const levelTotal = quantity * price;
+
+                    totalValue += levelTotal;
+                    if (level in levelTotals) {
+                        levelTotals[level] += levelTotal;
+                    } else {
+                        levelTotals[level] = levelTotal;
+                    }
+                }
+
+                return { totalValue, levelTotals };
+            }
+
+            function formatCurrency(value) {
+                let yens = Math.floor(value * 100) % 100;
+                let med = Math.floor(value) % 100;
+                let silver = Math.floor(value / 100) % 100;
+                let gold = Math.floor(value / 10000);
+
+                let currencyString = "";
+                if (gold > 0) currencyString += `${gold}🥇`;
+                if (silver > 0) currencyString += `${silver}🥈`;
+                if (med > 0) currencyString += `${med}🥉`;
+                if (yens > 0) currencyString += `${yens}🀄`;
+                return currencyString;
+            }
+        </script>
+        <script src="calculateFormulas.js"></script>
+        <script src="ThirdFormula.js"></script>
+</body>
+
+</html>
