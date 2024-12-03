@@ -38,14 +38,10 @@
             margin: 20px;
             font-size: 2.2em;
             font-weight: 500;
-            color: #ececec;
+            color: #d4a373;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
             transition: color 0.3s ease;
             animation: fadeIn 1.5s ease forwards;
-        }
-
-        .header:hover {
-            color: #d4a373;
         }
 
         /* Убираем стрелочки для всех полей ввода типа number */
@@ -427,8 +423,8 @@
 </head>
 
 <body>
-    <div class="header" onclick="toggleFormulas()">Diablo Automatization</div>
-    <div class="formulas" id="formulas">
+        <div class="header">Diablo Automatization</div>
+        <div class="formulas" id="formulas">
         <!-- Первая формула -->
         <div class="formula-item" onclick="toggleFormula('formula-1')">
             <div class="formula-indicator">1)</div>
@@ -815,31 +811,6 @@
                 additionalInputs.removeChild(additionalInputs.lastElementChild);
             }
         }
-
-        // Функция для переключения видимости списка формул с плавностью
-        function toggleFormulas() {
-            var formulas = document.getElementById("formulas");
-
-            // Если формулы скрыты, показываем их плавно
-            if (formulas.style.display === "none" || formulas.style.display === "") {
-                formulas.style.display = "block";  // Показываем список
-                setTimeout(function () {
-                    formulas.style.opacity = 1;  // Плавно меняем прозрачность
-                }, 10); // Небольшая задержка для активации перехода
-            } else {
-                formulas.style.opacity = 0;  // Плавно исчезаем
-                setTimeout(function () {
-                    formulas.style.display = "none";  // Скрываем список после исчезновения
-                }, 500);  // Задержка должна совпадать с временем анимации
-            }
-        }
-
-        // Инициализация скрытия списка формул при загрузке страницы
-        window.onload = function () {
-            var formulas = document.getElementById("formulas");
-            formulas.style.display = "none"; // Скрыть при загрузке
-            formulas.style.opacity = 0;  // Скрыть с анимацией
-        };
 
         function calculateMainTotal(formulaNumber) {
             const quantities = document.querySelectorAll(`#formula-${formulaNumber} .quantity`);
